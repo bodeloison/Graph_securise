@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Graphique sécurisé et en temps réel </title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+      body {
+        font-family: 'Segoe UI', sans-serif;
+        background-color: #ffffff;
+        margin: 40px;
+      }
+      .chart-container {
+        max-width: 800px;
+        margin: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chart-container">
+      <canvas id="myChart"></canvas>
+    </div>
+
+    <script>
+      const API_KEY = "🔑 TA_CLÉ_ICI"; // ⚠️ On ne va PAS laisser ça ici publiquement
+      const url = "TON_ENDPOINT_SECURISE?key=" + API_KEY;
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          const labels = data.map(item => item.Date);
+          const wARENHDataset = data.map(item => item.wARENH);
+          const woARENHDataset = data.map(item => item.woARENH);
+
+          new Chart(document.getElementById('myChart'), {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [
+                {
+                  label: 'wARENH',
+                  data: wARENHDataset,
+                  borderColor: '#5a52ff',
+                  backgroundColor: 'rgba(90, 82, 255, 0.1)',
+                  fill: true
+                },
+                {
+                  label: 'woARENH',
+                  data: woARENHDataset,
+                  borderColor: '#0fc4b2',
+                  backgroundColor: 'rgba(15, 196, 178, 0.1)',
+                  fill: true
+                }
+              ]
+            },
+            options: {
+              responsive: true,
+              plugins: {
+                legend: {
+                  position: 'bottom'
+                },
+                title: {
+                  display: true,
+                  text: 'Comparaison wARENH vs woARENH'
+                }
+              }
+            }
+          });
+        })
+        .catch(error => console.error("Erreur de chargement du JSON", error));
+    </script>
+  </body>
+</html>
