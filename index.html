@@ -2,31 +2,43 @@
 <html>
   <head>
     <meta charset="UTF-8">
-    <title>Graphique sécurisé et en temps réel </title>
+    <title>Graphique sécurisé et en temps réel</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module" src="./proxy.js"></script>
     <style>
       body {
         font-family: 'Segoe UI', sans-serif;
         background-color: #ffffff;
         margin: 40px;
       }
+
       .chart-container {
         max-width: 800px;
         margin: auto;
+        padding: 20px;
+        background: #f9f9ff;
+        border-radius: 20px;
+        box-shadow: 0 6px 24px rgba(90, 82, 255, 0.12);
+      }
+
+      h2 {
+        text-align: center;
+        color: #5a52ff;
+        font-size: 24px;
+        margin-bottom: 20px;
       }
     </style>
   </head>
   <body>
     <div class="chart-container">
+      <h2>📊 Comparaison wARENH vs woARENH</h2>
       <canvas id="myChart"></canvas>
     </div>
 
-    <script>
-      const API_KEY = "🔑 TA_CLÉ_ICI"; // ⚠️ On ne va PAS laisser ça ici publiquement
-      const url = "TON_ENDPOINT_SECURISE?key=" + API_KEY;
+    <script type="module">
+      import { getData } from './proxy.js';
 
-      fetch(url)
-        .then(response => response.json())
+      getData()
         .then(data => {
           const labels = data.map(item => item.Date);
           const wARENHDataset = data.map(item => item.wARENH);
@@ -42,14 +54,16 @@
                   data: wARENHDataset,
                   borderColor: '#5a52ff',
                   backgroundColor: 'rgba(90, 82, 255, 0.1)',
-                  fill: true
+                  fill: true,
+                  tension: 0.3
                 },
                 {
                   label: 'woARENH',
                   data: woARENHDataset,
                   borderColor: '#0fc4b2',
                   backgroundColor: 'rgba(15, 196, 178, 0.1)',
-                  fill: true
+                  fill: true,
+                  tension: 0.3
                 }
               ]
             },
@@ -60,14 +74,21 @@
                   position: 'bottom'
                 },
                 title: {
-                  display: true,
-                  text: 'Comparaison wARENH vs woARENH'
+                  display: false
+                }
+              },
+              scales: {
+                y: {
+                  beginAtZero: false
                 }
               }
             }
           });
         })
-        .catch(error => console.error("Erreur de chargement du JSON", error));
+        .catch(error => {
+          console.error("Erreur de chargement des données :", error);
+        });
     </script>
   </body>
 </html>
+
